@@ -1,8 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Button, Container, Row } from 'react-bootstrap';
-import { InputGroup, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 
 export default class App extends Component {
 
@@ -35,7 +34,6 @@ constructor(props) {
 	}
 
 	submit = () => {
-		//axios.post("http://localhost:44446/api/params", this.state, {
 		axios.post(this.config.host, this.state, {
 			headers: {
 		  // Overwrite Axios's automatically set Content-Type
@@ -51,7 +49,6 @@ constructor(props) {
 	}
 
 	componentDidMount() {
-//		axios.get("http://localhost:44446/api/params")
 		axios.get(this.config.host)		
 			.then((response) => {
 				console.log(response);
@@ -72,25 +69,32 @@ constructor(props) {
 		<h1>Настройки приложения</h1>
 	   
 		<Container>
-		<Form>
-  			<Form.Group className="mb-3" controlId="formLaunchSettings" >
-
-				<Form.Check name='use_timer' type="switch" id="use_timerId" label="Использовать таймер" checked={this.state.use_timer === "true"} 
-					onChange={this.handleCheckClick} />
-
-				<InputGroup className="mb-3">
-					<InputGroup.Text id="basic-addon1">Время запуска</InputGroup.Text>
-    				<FormControl name='launch_time' placeholder="03:00" aria-label="Username" aria-describedby="basic-addon1" 
-					value={this.state.launch_time}
-					onChange={this.handleChange} />
-  				</InputGroup>
-
-				<Form.Check name='save2bd' type="switch" id="save2bdId" label="Сохранять в БД" checked={this.state.save2bd === "true"}
-					onChange={this.handleCheckClick} />
-				<Button className='my-2' variant="primary" onClick={this.submit}>Save</Button> <br /><br />
-	  		</Form.Group>
-  		</Form>
-					  
+			<Form>
+				<Row>
+    				<Col>
+						<Form.Check name='use_timer' type="switch" id="use_timerId" 
+							label="Использовать таймер" checked={this.state.use_timer === "true"} 
+							onChange={this.handleCheckClick} />
+    				</Col>
+    				<Col>
+						<InputGroup className="mb-3">
+							<InputGroup.Text id="basic-addon1">Время запуска</InputGroup.Text>
+    						<FormControl name='launch_time' placeholder="03:00" aria-describedby="basic-addon1" 
+								value={this.state.launch_time}
+								onChange={this.handleChange} />
+  						</InputGroup>
+    				</Col>
+					<Col>
+						<Form.Check name='save2bd' type="switch" id="save2bdId" 
+							label="Сохранять в БД" checked={this.state.save2bd === "true"}
+							onChange={this.handleCheckClick} />
+					</Col>
+					<Col>
+						<Button className='my-2' variant="primary" onClick={this.submit}>Save</Button> 
+					</Col>
+ 				</Row>
+				<br /><br />
+  			</Form>			  
 		</Container>
 		</div>
    );
