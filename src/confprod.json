@@ -1,0 +1,4 @@
+{
+    "paramsroute" : "http://localhost:44446/api/params",
+    "reportroute" : "http://localhost:44446/api/report/buildsend"
+}

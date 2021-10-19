@@ -2,6 +2,7 @@ import './App.css';
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Form, Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
+import Calendar from 'react-calendar'
 
 export default class App extends Component {
 
@@ -10,7 +11,8 @@ constructor(props) {
 	  this.state = {
 		use_timer: "false",
 		launch_time: "",
-		save2bd: "false"
+		save2bd: "false",
+		launch_date : new Date()
 	  }; 
 	  
 	  this.config = require('./confdev.json');
@@ -25,6 +27,12 @@ constructor(props) {
 		});
 	}
 
+	handleCalend = (event) => {
+		this.setState({
+		  launch_date: event
+		});
+	}
+
 	handleCheckClick = (event) => {
 		let nam = event.target.name;
 		let val = event.target.checked ? "true" : "false";
@@ -34,7 +42,7 @@ constructor(props) {
 	}
 
 	submit = () => {
-		axios.post(this.config.host, this.state, {
+		axios.post(this.config.paramsroute, this.state, {
 			headers: {
 		  // Overwrite Axios's automatically set Content-Type
 		  'Content-Type': 'application/json'
@@ -48,8 +56,20 @@ constructor(props) {
 //		document.location.reload();
 	}
 
+	buildsend = () => {
+		var params = new URLSearchParams();
+		params.append('dateRep', '2021-10-18');
+		axios.get(this.config.reportroute + "?" + params.toString())
+		.then((response) => {
+			console.log(response);
+		  }, (error) => {
+			console.log(error);
+		  });
+//		document.location.reload();
+	}
+
 	componentDidMount() {
-		axios.get(this.config.host)		
+		axios.get(this.config.paramsroute)		
 			.then((response) => {
 				console.log(response);
 				this.setState({use_timer : response.data.use_timer});
@@ -59,7 +79,7 @@ constructor(props) {
 			.catch(function (error) {
 				console.log(error);
 			 });
-			console.log(this.config.host)
+			console.log(this.config.paramsroute)
 		}
 
 	render() {
@@ -94,6 +114,22 @@ constructor(props) {
 					</Col>
  				</Row>
 				<br /><br />
+
+				<Row>
+					<h1>Ручное управление</h1>
+					<Col xs={3}> 
+						<Form.Label >Дата отчёта</Form.Label>
+						<Form.Control plaintext readOnly value={this.state.launch_date} />
+					    <Calendar name='launch_date'
+    					    onChange={this.handleCalend}
+        					value={this.state.launch_date}
+      					/>
+					</Col>
+					<Col> 
+						<Button className='my-2' variant="primary" onClick={this.buildsend}>Построить и отправить</Button> 
+					</Col>
+ 				</Row>
+
   			</Form>			  
 		</Container>
 		</div>
