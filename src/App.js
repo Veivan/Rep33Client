@@ -12,7 +12,10 @@ constructor(props) {
 		use_timer: "false",
 		launch_time: "",
 		save2bd: "false",
-		launch_date : new Date()
+		launch_date : new Date(),
+		rep_save2bd: "false",
+		rep_usesaved: "false",
+		rep_getfile: "false"
 	  }; 
 	  
 	  this.config = require('./confdev.json');
@@ -58,8 +61,23 @@ constructor(props) {
 
 	buildsend = () => {
 		var params = new URLSearchParams();
-		params.append('dateRep', '2021-10-18');
-		axios.get(this.config.reportroute + "?" + params.toString())
+		params.append('dateRep', this.state.launch_date.toLocaleDateString("en-US"));
+		axios.get(this.config.reportrouteman + "?" + params.toString())
+		.then((response) => {
+			console.log(response);
+		  }, (error) => {
+			console.log(error);
+		  });
+//		document.location.reload();
+	}
+
+	buildadmin = () => {
+		var params = new URLSearchParams();
+		params.append('dateRep', this.state.launch_date.toLocaleDateString("en-US"));
+		params.append('isSave', this.state.rep_save2bd);
+		params.append('useSavedData', this.state.rep_usesaved);
+//		rep_getfile
+		axios.get(this.config.reportrouteadmin + "?" + params.toString())
 		.then((response) => {
 			console.log(response);
 		  }, (error) => {
@@ -86,14 +104,19 @@ constructor(props) {
 
     return (
 		<div className='App'>
-		<h1>Настройки приложения</h1>
 	   
 		<Container>
 			<Form>
 				<Row>
-    				<Col>
+					<h1>Настройки автоматического запуска</h1>
+					<Form.Control plaintext readOnly value="Формирование отчёта автоматически по таймеру на 'вчера'." />
+					<Form.Control plaintext readOnly value="Отчёт сохраняется в БД. Сохранённые данные не используются." />
+					<Form.Control plaintext readOnly value="Отправка отчёта списку адресатов." />
+				</Row>
+				<Row>
+					<Col>
 						<Form.Check name='use_timer' type="switch" id="use_timerId" 
-							label="Использовать таймер" checked={this.state.use_timer === "true"} 
+							label="Запускать по таймеру" checked={this.state.use_timer === "true"} 
 							onChange={this.handleCheckClick} />
     				</Col>
     				<Col>
@@ -110,13 +133,13 @@ constructor(props) {
 							onChange={this.handleCheckClick} />
 					</Col>
 					<Col>
-						<Button className='my-2' variant="primary" onClick={this.submit}>Save</Button> 
+						<Button className='my-2' variant="primary" onClick={this.submit}>Сохранить</Button> 
 					</Col>
  				</Row>
 				<br /><br />
 
 				<Row>
-					<h1>Ручное управление</h1>
+					<h1>Настройки ручного запуска</h1>
 					<Col xs={3}> 
 						<Form.Label >Дата отчёта</Form.Label>
 						<Form.Control plaintext readOnly value={this.state.launch_date} />
@@ -126,9 +149,31 @@ constructor(props) {
       					/>
 					</Col>
 					<Col> 
+						<Form.Control plaintext readOnly value="Формирование отчёта на выбранную дату." />
+						<Form.Control plaintext readOnly value="Используются сохранённые данные." />
+						<Form.Control plaintext readOnly value="Отчёт в БД не сохраняется." />
+						<Form.Control plaintext readOnly value="Отправка отчёта списку адресатов." />
+						<br /><br />
 						<Button className='my-2' variant="primary" onClick={this.buildsend}>Построить и отправить</Button> 
 					</Col>
- 				</Row>
+					<Col> 
+						<Form.Control plaintext readOnly value="Формирование отчёта на выбранную дату." />
+						<Form.Control plaintext readOnly value="Использовать сохранённые данные - из настроек." />
+						<Form.Control plaintext readOnly value="Сохранять отчёт в БД - из настроек." />
+						<Form.Control plaintext readOnly value="Сохранить файл отчёта локально - из настроек." />
+						<br /><br />
+						<Form.Check className="d-flex" name='rep_usesaved' type="switch" id="rep_usesavedId" 
+							label="Использовать сохранённые данные" checked={this.state.rep_usesaved === "true"}
+							onChange={this.handleCheckClick} />
+						<Form.Check className="d-flex" name='rep_save2bd' type="switch" id="rep_save2bdId" 
+							label="Сохранить в БД" checked={this.state.rep_save2bd === "true"}
+							onChange={this.handleCheckClick} />
+						<Form.Check className="d-flex" name='rep_getfile' type="switch" id="rep_getfiled" 
+							label="Сохранить файл отчёта локально" checked={this.state.rep_getfile === "true"}
+							onChange={this.handleCheckClick} />
+						<Button className='my-2' variant="primary" onClick={this.buildadmin}>Построить</Button> 
+					</Col>
+				</Row>
 
   			</Form>			  
 		</Container>
