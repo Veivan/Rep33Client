@@ -22,8 +22,8 @@ constructor(props) {
 			rep_getfile: "false"		
 	  	}; 
 	  
-	  	this.config = require('./confdev.json');
-	  	//this.config = require('./confprod.json');
+	  	//this.config = require('./confdev.json');
+	  	this.config = require('./confprod.json');
 	}
 
 	handleChange = (event) => {
