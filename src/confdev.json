@@ -1,3 +1,5 @@
 {
-    "host" : "http://localhost:44446/api/params"
+    "paramsroute" : "http://localhost:5000/api/params",
+    "reportrouteman" : "http://localhost:5000/api/report/buildsend",
+    "reportrouteadmin" : "http://localhost:5000/api/report/build"
 }
