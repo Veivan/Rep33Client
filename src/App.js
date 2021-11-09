@@ -2,7 +2,7 @@ import './App.css';
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Form, Button, Container, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
-import Calendar from 'react-calendar'
+import Calendar from 'react-calendar';
 import {saveAs} from 'file-saver';
 
 export default class App extends Component {
@@ -18,8 +18,8 @@ constructor(props) {
 			emails: "",
 			launch_date : date,
 			rep_save2bd: "false",
-			rep_usesaved: "false",
-			rep_getfile: "false"		
+			rep_usesaved: "true",
+			rep_getfile: "true"		
 	  	}; 
 	  
 	  	//this.config = require('./confdev.json');
@@ -60,7 +60,6 @@ constructor(props) {
 		  }, (error) => {
 			console.log(error);
 		  });
-//		document.location.reload();
 	}
 
 	buildsend = () => {
@@ -72,29 +71,26 @@ constructor(props) {
 		  }, (error) => {
 			console.log(error);
 		  });
-//		document.location.reload();
 	}
 
-	buildadmin = () => {
+	buildadmin = async () => {
 		var params = new URLSearchParams();
 		params.append('dateRep', this.state.launch_date.toLocaleDateString("en-US"));
 		params.append('isSave', this.state.rep_save2bd);
 		params.append('useSavedData', this.state.rep_usesaved);
-//		rep_getfile
-		axios.get(this.config.reportrouteadmin + "?" + params.toString())
-		.then((response) => {
+		params.append('rep_getfile', this.state.rep_getfile);
+		
+		axios.get(this.config.reportrouteadmin + "?" + params.toString(), {responseType: 'blob', })
+/*		.then(response => {
 			console.log(response);
-		})
-		.then(function (response) {
-			return response.blob();
-		})
-		.then(function(blob) {
-			saveAs(blob, "yourFilename.xlsx");
-		})
+		}) */
+		.then(response => {
+			if (this.state.rep_getfile)
+				saveAs(response.data, "Отчет по грузообороту.xlsx");
+		}) 
 		.catch(error => {
-			//whatever
+			console.log(error);
 		});
-//		document.location.reload();
 	}
 	
 	componentDidMount() {
@@ -193,7 +189,7 @@ constructor(props) {
 							Формирование отчёта на выбранную дату.<br />
 							Использовать сохранённые данные - из настроек.<br />
 							Сохранять отчёт в БД - из настроек.<br />
-							Сохранить файл отчёта локально - из настроек.(under construction)
+							Сохранить файл отчёта локально - из настроек.
 						</Form.Text>
 						<br />
 						<Form.Check name='rep_usesaved' type="switch" id="rep_usesavedId" 
@@ -202,7 +198,7 @@ constructor(props) {
 						<Form.Check name='rep_save2bd' type="switch" id="rep_save2bdId" 
 							label="Сохранить в БД" checked={this.state.rep_save2bd === "true"}
 							onChange={this.handleCheckClick} />
-						<Form.Check name='rep_getfile' type="switch" id="rep_getfiled" disabled
+						<Form.Check name='rep_getfile' type="switch" id="rep_getfileId" 
 							label="Сохранить файл отчёта локально" checked={this.state.rep_getfile === "true"}
 							onChange={this.handleCheckClick} />
 						<Button className='my-2' variant="primary" onClick={this.buildadmin}>Построить</Button> 
