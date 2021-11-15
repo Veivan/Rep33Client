@@ -14,7 +14,6 @@ constructor(props) {
 	  	this.state = {
 			use_timer: "false",
 			launch_time: "",
-			save2bd: "false",
 			emails: "",
 			launch_date : date,
 			rep_save2bd: "false",
@@ -99,7 +98,6 @@ constructor(props) {
 				console.log(response);
 				this.setState({use_timer : response.data.use_timer});
 				this.setState({launch_time : response.data.launch_time});
-				this.setState({save2bd : response.data.save2bd});
 				this.setState({emails : response.data.emails});
 			})
 			.catch(function (error) {
@@ -139,11 +137,6 @@ constructor(props) {
 								onChange={this.handleChange} />
   						</InputGroup>
     				</Col>
-					<Col>
-						<Form.Check name='save2bd' type="switch" id="save2bdId" 
-							label="Сохранять в БД" checked={this.state.save2bd === "true"}
-							onChange={this.handleCheckClick} />
-					</Col>
  				</Row>
 				<Row>
 					<Col>
