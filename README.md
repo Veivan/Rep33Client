@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Frontend of reporting system
 
--React app using node.js
--App has to be deployed into docker container.
+- React app using node.js
+- App has to be deployed into docker container.
 
 ![dashboard](dashboard.png)
